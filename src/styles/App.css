@@ -1,0 +1,279 @@
+/* Global layout rules */
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("public/Lato-Black.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "Lato", arial;
+  margin: 0;
+  padding: 0;
+  background:white;
+  color: #222;
+}
+
+/* Helpful global defaults */
+*, *::before, *::after { box-sizing: border-box; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* Layout container used across pages */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Site main + aside layout for store and pages with side content */
+.site-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.site-main { flex: 1; }
+.cart-aside {
+  width: 320px;
+  border-left: 1px solid #eee;
+  padding: 12px;
+  box-sizing: border-box;
+  background: #fafafa;
+}
+
+/* Product grid helper class */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+/* Product card adjustments (replaces inline styles) */
+.product-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; display:flex; flex-direction:column; height:100%; }
+.product-card .media { width: 100%; height: 160px; object-fit: cover; }
+.product-card .card-body { padding: 12px; display:flex; flex-direction:column; gap:8px; }
+.product-card .card-actions { margin-top: auto; display:flex; gap:8px; }
+
+/* Hero and content sections */
+.hero-section { background-size: cover; background-position: center; padding: 64px 16px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+.content-section { padding: 32px 16px; max-width: 900px; margin: 0 auto; }
+
+/* Responsive breakpoints */
+@media (max-width: 900px) {
+  .site-row { flex-direction: column-reverse; }
+  .cart-aside { width: 100%; border-left: none; border-top: 1px solid #eee; }
+}
+
+@media (max-width: 480px) {
+  .hero-section { padding: 40px 12px; }
+  .logo img { height: 44px; }
+  nav a { font-size: 0.95rem; }
+}
+
+/* Navbar styles */
+.navbar {
+  display: flex;
+  background-color: RGB(250, 202, 110);
+  border-bottom: 2px solid #9d514d;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.logo img {
+  height: 60px;
+  width: auto;
+}
+nav {
+padding: 10px;
+position: sticky;
+top: 0;
+}
+nav a {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #9d514d;
+  font-weight: bold;
+}
+nav a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/*
+.button-group {
+display: flex;
+gap: 6px;
+    color: RGB(250, 202, 110);
+      }
+      .donation-button .donate-button {
+        background-color: #9d514d;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .donation-button-div .donation-button:hover {
+        background-color: #5a2a2a;
+      }
+      .join-button-div .join-button {
+        background-color: #7c3a38;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .join-button-div .join-button:hover {
+        background-color: #5a2a2a;
+      }
+        */
+
+/*Hamburger menu styles */
+/* Hamburger / responsive nav styles */
+.nav-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #9d514d;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.hamburger {
+  display: none; /* shown on small screens via media query */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; /* stack bars vertically */
+  gap: 4px;
+}
+
+.hamburger .bar {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background: #9d514d;
+  border-radius: 2px;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+/* When menu is open, show mobile menu and animate hamburger */
+.hamburger[aria-expanded="true"] .bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.hamburger[aria-expanded="true"] .bar:nth-child(2) {
+  opacity: 0;
+}
+.hamburger[aria-expanded="true"] .bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: RGB(250, 202, 110);
+    flex-direction: column;
+    padding: 12px 16px;
+    gap: 12px;
+    z-index: 1000;
+    border-bottom: 2px solid #9d514d;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  /* reduce logo size a bit on small screens */
+  .logo img { height: 48px; }
+}
+
+
+/*WHO ARE WE SECTION*/
+ /* Container and headings */
+ .who-section { padding: 16px; max-width: 1100px; margin: 0 auto; }
+ h1 { margin: 12px 0; }
+
+/* Scrollable cards container:
+  - max-height controls when the vertical scrollbar appears
+  - grid keeps cards in columns on wide screens
+  - gap for spacing */
+.cards-scroll {
+  max-height: 60vh; /* adjust this to change scroll window height */
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Card styling */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s;
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+
+}
+
+.card .content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 0 auto;
+}
+.title { color: grey; margin: 0; }
+.email { font-size: 0.9rem; color: #333; word-break: break-word; }
+.button {
+  border: none;
+  outline: 0;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.button:hover { background-color: #444; }
+/* Small screens: single column list, still scrolls vertically inside the box */
+@media (max-width: 650px) {
+  .cards-scroll {
+    grid-template-columns: 1fr;
+    max-height: 65vh;
+  }
+  .card img { height: 160px; }
+}
+  .cards-scroll::-webkit-scrollbar { width: 10px; }
+  .cards-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 6px; }
