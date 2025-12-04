@@ -5,41 +5,46 @@ export default function Cart() {
   const { summary, setQty, removeFromCart, clearCart } = useCart();
   const { items, subtotal, totalItems } = summary;
 
-  const checkout = async () => {
-    // Prepare items payload for server
-    const payload = items.map(({ product, qty }) => ({
-      id: product.id,
-      name: product.name,
-      unit_amount: Math.round(Number(product.price || 0) * 100), // cents
-      quantity: qty,
-      image: product.img || null,
-    }));
-
+const checkout = async () => {
+const payload = items.map(({ product, qty }) => ({
+  id: product.id,
+  name: product.name,
+  unit_amount: Math.round(Number(product.price || 0) * 100), // cents (integer)
+  quantity: Number(qty) || 1,
+  currency: 'usd',
+  image: product.img || null,
+}));
     try {
-      const res = await fetch('/create-checkout-session', {
+      // Use VITE_CHECKOUT_SERVER_URL when explicitly set, otherwise use relative path
+      const serverBase = import.meta.env.VITE_CHECKOUT_SERVER_URL ?? '';
+      const endpoint = `${serverBase}/create-checkout-session`.replace(/\/+/g, '/').replace(':/', '://');
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: payload }),
       });
 
-      if (!res.ok) throw new Error('Failed to create checkout session');
+      if (!res.ok) {
+        // try to read JSON/text response for better error detail
+        let bodyText = '';
+        try { bodyText = await res.text(); } catch (e) { /* ignore */ }
+        throw new Error(`Failed to create checkout session: ${res.status} ${res.statusText} - ${bodyText}`);
+      }
 
       const data = await res.json();
 
-      // If server returns a full url, redirect directly
       if (data.url) {
         window.location.href = data.url;
         return;
       }
 
-      // Otherwise attempt to use Stripe.js to redirect with sessionId
       const sessionId = data.sessionId || data.id;
-      if (!sessionId) throw new Error('No session id returned');
+      if (!sessionId) throw new Error('No session id returned from server');
 
       const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
       if (!publishableKey) throw new Error('Missing publishable key (VITE_STRIPE_PUBLISHABLE_KEY)');
 
-      // Load Stripe.js if needed
       if (!window.Stripe) {
         const stripeJs = document.createElement('script');
         stripeJs.src = 'https://js.stripe.com/v3/';
@@ -51,7 +56,6 @@ export default function Cart() {
       const { error } = await stripe.redirectToCheckout({ sessionId });
       if (error) throw error;
     } catch (err) {
-      // fallback to mailto if Stripe fails
       console.error('Checkout error', err);
       const lines = items.map(it => `${it.qty} x ${it.product.name} — $${(it.product.price * it.qty).toFixed(2)}`);
       const body = `Order:\n\n${lines.join("\n")}\n\nTotal: $${subtotal.toFixed(2)}`;
@@ -88,9 +92,10 @@ export default function Cart() {
               <div>Subtotal</div>
               <div style={{ fontWeight: 700 }}>${subtotal.toFixed(2)}</div>
             </div>
-            <div style>
-              <button onClick={checkout}  style={{ flex: 1, background: "#0077cc", color: "#fff", border: "none", padding: "8px 10px", borderRadius: 6 }}>Checkout </button>
-
+            <div>
+              <button onClick={checkout}  style={{ flex: 1, background: "#0077cc", color: "#fff", border: "none", padding: "8px 10px", borderRadius: 6 }}>
+                Checkout
+              </button>
             </div>
            
             </div>

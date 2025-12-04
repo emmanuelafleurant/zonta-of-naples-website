@@ -14,6 +14,7 @@ export default function Navbar() {
       </div>
 
       <nav id="myLinks" className={`nav-links ${open ? "open" : ""}`}>
+        <Link to="/">HOME</Link>
         <Link to="/whoarewe">WHO ARE WE</Link>
         <Link to="/membership">MEMBERSHIP</Link>
         <Link to="/scholarships">SCHOLARSHIPS</Link>
